@@ -1,5 +1,0 @@
-[wokwi]
-version = 1
-firmware = "build/Semaforo.elf"  
-diagram = "diagram.json"
-elf = "build/Semaforo.elf"         
