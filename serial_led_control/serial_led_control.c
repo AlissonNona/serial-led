@@ -8,7 +8,6 @@
 #include "ws2812.h"
 
 // Definições de pinos
-#define WS2812_PIN 7
 #define LED_RGB_RED_PIN 11
 #define LED_RGB_GREEN_PIN 12
 #define LED_RGB_BLUE_PIN 13
