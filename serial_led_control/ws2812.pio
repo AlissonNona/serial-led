@@ -1,0 +1,25 @@
+.program ws2812
+
+.side_set 1
+
+; Protocolo WS2812 (bit timing para 800 kHz):
+; - Bit 0: 0.4us alto, 0.85us baixo
+; - Bit 1: 0.8us alto, 0.45us baixo
+
+.define public T1 2
+.define public T2 5
+.define public T3 3
+
+.wrap_target
+    pull block          side 0
+    out x, 32           side 0      ; Carrega 32 bits (cor do pixel)
+
+bitloop:
+    out pins, 1         side 0 [T3 - 1] ; Envia 1 bit (LSB first)
+    jmp !x do_zero      side 1 [T1 - 1] ; Bit = 1 (alto por T1 + T2 ciclos)
+    jmp bitloop         side 1 [T2 - 1] ; Continua o loop
+
+do_zero:
+    nop                 side 0 [T2 - 1] ; Bit = 0 (alto por T1 ciclos)
+    jmp bitloop         side 0
+.wrap
