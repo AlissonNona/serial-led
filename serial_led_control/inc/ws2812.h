@@ -9,7 +9,7 @@
 #ifdef PICO_DEFAULT_WS2812_PIN
     #define WS2812_PIN PICO_DEFAULT_WS2812_PIN
 #else
-    #define WS2812_PIN 2  // ajuste para o pino que estiver usando
+#define WS2812_PIN 7 // Use o pino GPIO 7// ajuste para o pino que estiver usando
 #endif
 
 #ifdef __cplusplus

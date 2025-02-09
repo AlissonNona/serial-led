@@ -1,53 +1,50 @@
 #ifndef SSD1306_H
 #define SSD1306_H
 
-#include <stdlib.h>
+#include <stdbool.h>
 #include "pico/stdlib.h"
 #include "hardware/i2c.h"
 
-#define WIDTH 128
-#define HEIGHT 64
-#define SSD1306_I2C_ADDR 0x3C
+// Definições do display
+#define SSD1306_WIDTH  128
+#define SSD1306_HEIGHT 64
+#define SSD1306_ADDRESS 0x3C
 
-// Comandos do SSD1306 (como já fornecido no seu código)
-typedef enum {
-  SET_CONTRAST = 0x81,
-  SET_ENTIRE_ON = 0xA4,
-  SET_NORM_INV = 0xA6,
-  SET_DISP = 0xAE,
-  SET_MEM_ADDR = 0x20,
-  SET_COL_ADDR = 0x21,
-  SET_PAGE_ADDR = 0x22,
-  SET_DISP_START_LINE = 0x40,
-  SET_SEG_REMAP = 0xA0,
-  SET_MUX_RATIO = 0xA8,
-  SET_COM_OUT_DIR = 0xC0,
-  SET_DISP_OFFSET = 0xD3,
-  SET_COM_PIN_CFG = 0xDA,
-  SET_DISP_CLK_DIV = 0xD5,
-  SET_PRECHARGE = 0xD9,
-  SET_VCOM_DESEL = 0xDB,
-  SET_CHARGE_PUMP = 0x8D
-} ssd1306_command_t;
+// Comandos do SSD1306 (valores hexadecimais)
+#define SSD1306_SET_CONTRAST         0x81
+#define SSD1306_SET_ENTIRE_ON        0xA4
+#define SSD1306_SET_NORMAL_DISPLAY   0xA6
+#define SSD1306_SET_DISPLAY_OFF      0xAE
+#define SSD1306_SET_DISPLAY_ON       0xAF
+#define SSD1306_SET_MEMORY_MODE      0x20
+#define SSD1306_SET_COL_ADDR         0x21
+#define SSD1306_SET_PAGE_ADDR        0x22
+#define SSD1306_SET_DISPLAY_START    0x40
+#define SSD1306_SET_SEG_REMAP        0xA0
+#define SSD1306_SET_MUX_RATIO        0xA8
+#define SSD1306_SET_COM_SCAN_DIR     0xC0
+#define SSD1306_SET_DISPLAY_OFFSET   0xD3
+#define SSD1306_SET_COM_PINS         0xDA
+#define SSD1306_SET_DISPLAY_CLOCK    0xD5
+#define SSD1306_SET_PRECHARGE        0xD9
+#define SSD1306_SET_VCOM_DESELECT    0xDB
+#define SSD1306_SET_CHARGE_PUMP      0x8D
 
-// Definindo estrutura para o SSD1306
+// Estrutura principal do display
 typedef struct {
-  uint8_t width, height, pages, address;
-  i2c_inst_t *i2c_port;
-  bool external_vcc;
-  uint8_t *ram_buffer;
-  size_t bufsize;
-  uint8_t port_buffer[2];
+    uint8_t width;          // Largura do display (128)
+    uint8_t height;         // Altura do display (64)
+    uint8_t pages;          // Número de páginas (8 para 64 pixels de altura)
+    bool external_vcc;      // Fonte de alimentação externa (true/false)
+    i2c_inst_t *i2c_port;   // Porta I2C (ex: i2c0 ou i2c1)
+    uint8_t *buffer;        // Buffer de dados da tela
 } ssd1306_t;
 
-void ssd1306_init(ssd1306_t *ssd, uint8_t width, uint8_t height, bool external_vcc, uint8_t address, i2c_inst_t *i2c);
-void ssd1306_config(ssd1306_t *ssd);
-void ssd1306_command(ssd1306_t *ssd, uint8_t command);
-void ssd1306_send_data(ssd1306_t *ssd);
+// Protótipos de funções
+void ssd1306_init(ssd1306_t *ssd, i2c_inst_t *i2c_port); // Inicialização simplificada
+void ssd1306_clear(ssd1306_t *ssd);                      // Limpa o buffer
+void ssd1306_update(ssd1306_t *ssd);                     // Envia o buffer para o display
+void ssd1306_draw_pixel(ssd1306_t *ssd, uint8_t x, uint8_t y, bool color); // Desenha um pixel
+void ssd1306_draw_char(ssd1306_t *ssd, uint8_t x, uint8_t y, char ch);     // Desenha um caractere
 
-void ssd1306_pixel(ssd1306_t *ssd, uint8_t x, uint8_t y, bool value);
-void ssd1306_fill(ssd1306_t *ssd, bool value);
-void ssd1306_clear(ssd1306_t *ssd);   // Declaração
-void ssd1306_update(ssd1306_t *ssd);  // Declaração
-
-#endif  // SSD1306_H
+#endif // SSD1306_H
